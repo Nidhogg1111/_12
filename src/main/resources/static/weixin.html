@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .el-table .warning-row {
+      background: oldlace;
+    }
+
+    .el-table .success-row {
+      background: #f0f9eb;
+    }
+
+
+    .el-header {
+      background-color: #B3C0D1;
+      color: #333;
+      line-height: 60px;
+    }
+
+    .el-aside {
+      color: #333;
+    }
+    .div{
+      width :500px ;
+      height:500px;
+      margin:auto;
+      background-image : url("img/1.jpg");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      padding: 0px;
+      top: 0;
+      left: 0;
+    }
+    .div1{
+      margin:auto;
+    }
+    .text {
+      letter-spacing: 0.2rem;
+      font-size: 1.5rem;
+      background-image: -webkit-linear-gradient(left, #147B96, #E6D205 25%, #147B96 50%, #E6D205 75%, #147B96);
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+      -webkit-background-size: 200% 100%;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <el-container style="height: 100%; border: 1px solid #eee">
+    <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+      <el-menu :default-openeds="['1','2', '3']">
+        <el-submenu index="1">
+          <template slot="title"><i class="el-icon-message"></i>场地预约</template>
+          <el-menu-item-group>
+            <el-menu-item index="1-1"  @click="goUrl('book.html')"  active-text-color>场地预约</el-menu-item>
+            <el-menu-item index="1-1"  @click="goUrl('bookcoach.html')"  active-text-color>教练预约</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="2">
+          <template slot="title"><i class="el-icon-menu"></i>取消预约</template>
+          <el-menu-item-group>
+            <el-menu-item index="2-1" @click="goUrl('cancel.html')">取消场地预约</el-menu-item>
+            <el-menu-item index="2-2" @click="goUrl('cancelcoach.html')">取消教练预约</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="3">
+          <template slot="title"><i class="el-icon-setting"></i>修改个人信息</template>
+          <el-menu-item-group>
+            <template slot="title">修改</template>
+            <el-menu-item index="3-1" @click="goUrl('update.html')">基本信息</el-menu-item>
+            <el-menu-item index="3-2" @click="goUrl('updatepassword.html')">修改密码</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="4">
+          <template slot="title"><i class="el-icon-setting"></i>BMI测试</template>
+          <el-menu-item-group>
+            <template slot="title">BMI</template>
+            <el-menu-item index="4-1" @click="goUrl('BMI.html')">BMI测试</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="5">
+          <template slot="title"><i class="el-icon-setting"></i>支付</template>
+          <el-menu-item-group>
+            <template slot="title">支付</template>
+            <el-menu-item index="5-1" @click="goUrl('weixin.html')">微信支付</el-menu-item>
+            <el-menu-item index="5-2" @click="goUrl('zhifubao.html')">支付宝支付</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+      </el-menu>
+    </el-aside>
+
+
+    <el-container>
+
+      <el-header style="text-align: right; font-size: 12px">
+        <el-dropdown>
+          <i class="el-icon-setting" style="margin-right: 15px"></i>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item ><el-button @click="rua">退出</el-button></el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <span>{{form.name}}</span>
+      </el-header>
+      <el-main>
+
+        <div class="text">应支付的金额为:{{jine}}
+        </div>
+        <div class="div" ></div>
+
+      </el-main>
+    </el-container>
+  </el-container>
+</div>
+<script src="js/vue.js"></script>
+<!--<link rel="stylesheet" href="css/element-ui.css">-->
+<!--<script src="js/element-ui.js"></script>-->
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/axios.js"></script>
+<script>
+  new Vue({
+    el: "#app",
+    async mounted() {
+      await this.getCookie();
+    },
+    methods: {
+     getCookie(){
+
+        var _this=this;
+          axios({
+            method:"get",
+            url:"http://localhost:81/Update/getCookie"
+          }).then(function(resp){
+
+            _this.xuehao=resp.data.num;
+            _this.form.status=resp.data.status;
+            _this.selectAll();
+          });
+
+      },
+      selectAll() {
+        var _this = this;
+          axios({
+            method: "get",
+            url: "http://localhost:81/zhifu?xuehao="+_this.xuehao,
+          }).then(function (resp) {
+            _this.totalCount=resp.data;
+            _this.jine=_this.totalCount * 5;
+          });
+      },
+      rua(){
+        window.open("login.html","_self")
+      },
+      goUrl(url) {
+        window.open(url, "_self")
+      },
+    },
+    data() {
+      return {
+        totalCount:'',
+        record:{
+          id:'',
+          coach:'',
+          time:'',
+          xuehao:'',
+          num:''
+        },
+        xuehao:'',
+        jine:100,
+        form: {
+          name: '',
+          age: '',
+          sex: '',
+          status: 1,
+          num: '',
+        },
+        //cookie
+        cookie:{
+          id  :'',
+          name:'',
+          sex :'',
+          age :'',
+          num :'',
+        }
+      }
+    }
+  })
+</script>
+</body>
+</html>

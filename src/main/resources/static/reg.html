@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url(img/img_1.png);
+    }
+
+    .div {
+      width: 800px;
+      height: 700px;
+      /* 实现整个框居中效果 */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+    }
+
+
+    .sign-div {
+      width: 500px;
+      height: 500px;
+      text-align: center;
+      outline: none;
+      border: 1px solid rgb(94, 92, 233);
+      border-radius: 8px;
+      background-color: rgba(172, 235, 243, .2);
+      box-sizing: border-box;
+    }
+
+    .sign-div h1 {
+      margin-bottom: 10px;
+      color: rgb(29, 26, 26);
+    }
+
+    input {
+      width: 250px;
+      height: 44px;
+      border: none;
+      /* 元素周围的轮廓无效 */
+      outline: none;
+      /* 为元素指定的任何内边距和边框都将在已设定的宽度和高度内进行绘制 */
+      box-sizing: border-box;
+      display: block;
+      padding: 0 16px;
+    }
+
+    .input-text {
+      margin: 5px auto;
+      border-radius: 16px;
+    }
+
+    .input-text:hover {
+      border: 0.5px solid rgb(76, 76, 233);
+      transition: 0.5s;
+      border-radius: 4px;
+    }
+
+    .input-btn {
+      margin: 30px auto 20px;
+      border-radius: 44px;
+      cursor: pointer;
+      background-color: rgba(84, 175, 249, 0.8);
+    }
+
+    .input-btn:hover {
+      color: #fff;
+      font-size: 16;
+      border-radius: 4px;
+      transition: 0.5s;
+      background-color: rgba(10, 138, 243, 0.8);
+    }
+
+    .sign-div a {
+      text-decoration: none;
+      color: rgb(92, 61, 112);
+      font-size: 14px;
+      padding: 10px;
+      transition: 0.8s;
+      display: block;
+    }
+
+    a:hover {
+      color: #FFF;
+      background: rgba(0, 0, 0, .3);
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div class="div">
+    <div class="head-div"></div>
+    <div class="sign-div">
+      <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="账号" prop="username">
+          <el-input type="text" v-model="ruleForm.username" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="pass">
+          <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="checkPass">
+          <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+        </el-form-item>
+        <template>
+          <el-form-item label="请选择">
+          <el-radio-group label="请选择" id="radio" name="radio" v-model="ruleForm.radio">
+            <el-radio :label="1" value="1">学生</el-radio>
+            <el-radio :label="2" value="2">教师</el-radio>
+            <el-radio :label="3" value="3">普通用户</el-radio>
+          </el-radio-group>
+          </el-form-item>
+        </template>
+        <el-form-item label="姓名" prop="name">
+          <el-input type="text" v-model="ruleForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <template>
+          <el-form-item label="性别">
+          <el-radio v-model="ruleForm.sex" label="1">男</el-radio>
+          <el-radio v-model="ruleForm.sex" label="2">女</el-radio>
+          </el-form-item>
+        </template>
+        <el-form-item label="教职工号" prop="num">
+          <el-input v-model="ruleForm.num"></el-input>
+        </el-form-item>
+        <el-form-item label="年龄" prop="age">
+          <el-input v-model.number="ruleForm.age"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+  </div>
+
+</div>
+
+
+<script src="js/vue.js"></script>
+<!--<link rel="stylesheet" href="css/element-ui.css">-->
+<!--<script src="js/element-ui.js"></script>-->
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/axios.js"></script>
+<script>
+  new Vue({
+    el:"#app",
+    data() {
+      var checkAge = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('年龄不能为空'));
+        }
+        setTimeout(() => {
+          if (!Number.isInteger(value)) {
+            callback(new Error('请输入数字值'));
+          } else {
+            if (value < 18) {
+              callback(new Error('必须年满18岁'));
+            } else {
+              callback();
+            }
+          }
+        }, 1000);
+      };
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.ruleForm.checkPass !== '') {
+            this.$refs.ruleForm.validateField('checkPass');
+          }
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.ruleForm.pass) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
+
+      var checkName = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('姓名不能为空'));
+        }
+      };
+      var checkUsername = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('用户名不能为空'));
+        }
+      };
+      var checkNum = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('教职工不能为空'));
+        }
+      };
+      return {
+        ruleForm: {
+          pass: '',
+          checkPass: '',
+          age: '',
+          username:'',
+          sex:'',
+          name:'',
+          num:'',
+          radio:'',
+        },
+        rules: {
+          pass: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+          checkPass: [
+            { validator: validatePass2, trigger: 'blur' }
+          ],
+          age: [
+            { validator: checkAge, trigger: 'blur' }
+          ],
+          name: [
+            { validator: checkName, trigger: 'blur' }
+          ],
+          username: [
+            { validator: checkUsername, trigger: 'blur' }
+          ],
+          num: [
+            { validator: checkNum, trigger: 'blur' }
+          ],
+
+        }
+      };
+    },
+    methods: {
+      submitForm() {
+        var _this =this;
+        axios({
+          method:"post",
+          url:"http://localhost:81/webreg",
+          data:_this.ruleForm
+        }).then(function (resp){
+          if (resp.data == "success") {
+            _this.$message({
+              message: '恭喜你，注册成功',
+              type: 'success'
+            });
+            window.location.href="http://localhost:81/login.html";
+          }
+          else{
+            _this.$message.error('注册失败');
+          }
+        })
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
+    }
+  })
+</script>
+</body>
+</html>

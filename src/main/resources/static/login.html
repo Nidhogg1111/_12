@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url(img/img_1.png);
+        }
+
+        .div {
+            width: 400px;
+            height: 500px;
+            /* 实现整个框居中效果 */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+        }
+
+        .head-div {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #999;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            background: url(img/1.bmp) no-repeat;
+            background-size: 100px 100px;
+        }
+
+        .sign-div {
+            width: 400px;
+            height: 300px;
+            text-align: center;
+            outline: none;
+            border: 1px solid rgb(94, 92, 233);
+            border-radius: 8px;
+            background-color: rgba(172, 235, 243, .2);
+            box-sizing: border-box;
+        }
+
+        .sign-div h1 {
+            margin-bottom: 10px;
+            color: rgb(29, 26, 26);
+        }
+
+        input {
+            width: 250px;
+            height: 44px;
+            border: none;
+            /* 元素周围的轮廓无效 */
+            outline: none;
+            /* 为元素指定的任何内边距和边框都将在已设定的宽度和高度内进行绘制 */
+            box-sizing: border-box;
+            display: block;
+            padding: 0 16px;
+        }
+
+        .input-text {
+            margin: 5px auto;
+            border-radius: 16px;
+        }
+
+        .input-text:hover {
+            border: 0.5px solid rgb(76, 76, 233);
+            transition: 0.5s;
+            border-radius: 4px;
+        }
+
+        .input-btn {
+            margin: 30px auto 20px;
+            border-radius: 44px;
+            cursor: pointer;
+            background-color: rgba(84, 175, 249, 0.8);
+        }
+
+        .input-btn:hover {
+            color: #fff;
+            font-size: 16;
+            border-radius: 4px;
+            transition: 0.5s;
+            background-color: rgba(10, 138, 243, 0.8);
+        }
+
+        .sign-div a {
+            text-decoration: none;
+            color: rgb(92, 61, 112);
+            font-size: 14px;
+            padding: 10px;
+            transition: 0.8s;
+            display: block;
+        }
+
+        a:hover {
+            color: #FFF;
+            background: rgba(0, 0, 0, .3);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="div">
+        <div class="head-div"></div>
+        <div class="sign-div">
+            <form class="" action="#" method="POST">
+                <h1>登录</h1>
+                <el-row type="flex" justify="center" align="middle">
+                <el-col :span="16">
+                <el-input id="username" name="username" v-model="username" placeholder="请输入账号"></el-input>
+                </el-col>
+                </el-row>
+                <el-row type="flex" justify="center" align="middle">
+                    <el-col :span="16">
+                        <el-input id="password" name="password" placeholder="请输入密码" v-model="password" show-password></el-input>
+                    </el-col>
+                </el-row>
+                <template>
+                    <el-radio-group id="radio" name="radio" v-model="radio">
+                        <el-radio :label="1" value="1">学生</el-radio>
+                        <el-radio :label="2" value="2">教师</el-radio>
+                        <el-radio :label="3" value="3">普通用户</el-radio>
+                    </el-radio-group>
+                </template>
+                <el-row>
+                    <el-button type="primary" plain  @click="login">登录</el-button>
+                    <el-button type="success" plain  onclick='location.href=("reg.html")'>注册</el-button>
+                </el-row>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="js/vue.js"></script>
+<!--<link rel="stylesheet" href="css/element-ui.css">-->
+<!--<script src="js/element-ui.js"></script>-->
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/axios.js"></script>
+<script>
+    new Vue({
+        el: "#app",
+        methods:{
+            login(){
+                var _this = this;
+                axios({
+                    method: "get",
+                    url: "http://localhost:81/login?username="+_this.username+"&password="+_this.password+"&radio="+_this.radio,
+                }).then(function (resp) {
+                    if (resp.data == "success") {
+                        _this.$message({
+                            message: '恭喜你，登录成功',
+                            type: 'success'
+                        });
+                        window.location.href="book.html";
+                    }
+                    else{
+                        _this.$message.error('账号或密码错误');
+                    }
+                    ;
+                })
+            }
+
+        },
+        data(){
+            return{
+                username:'',
+                password:'',
+                radio: 1,
+            }
+
+        }
+
+    })
+</script>
+</body>
+</html>

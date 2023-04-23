@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example._12.dao.RecordDao">
+    <resultMap id="ResultMap2" type="com.example._12.domain.venue">
+    </resultMap>
+    <resultMap id="ResultMap3" type="com.example._12.domain.Record">
+    </resultMap>
+
+
+    <delete id="deleteRecordByIds">
+        delete from record where num in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectCancelByPageAndContion" resultMap="ResultMap3">
+        select * from record
+        <where>
+            <if test="rec.coach != null and rec.coach != '' ">
+                coach like #{rec.coach}
+            </if>
+            <if test="rec.id != null and rec.id != '' ">
+                and id = #{rec.id}
+            </if>
+            <if test="rec.xuehao != null and rec.xuehao !=''">
+                and xuehao like #{rec.xuehao}
+            </if>
+        </where>
+        limit #{begin},#{size};
+    </select>
+    <select id="selectCancelTotalCountByContion" resultType="integer">
+        select count(*) from record
+        <where>
+            <if test="rec.coach != null and rec.coach != '' ">
+                coach like #{rec.coach}
+            </if>
+            <if test="rec.id != null and rec.id != '' ">
+                and id = #{rec.id}
+            </if>
+            <if test="rec.xuehao != null and rec.xuehao !=''">
+                and xuehao like #{rec.xuehao}
+            </if>
+        </where>
+    </select>
+
+</mapper>

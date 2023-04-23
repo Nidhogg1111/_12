@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example._12.dao.zhifuDao">
+    <resultMap id="ResultMap2" type="com.example._12.domain.venue">
+    </resultMap>
+    <resultMap id="ResultMap3" type="com.example._12.domain.Record">
+    </resultMap>
+
+    <select id="selectTotalCount" resultType="java.lang.Integer">
+        select count(*) from record where xuehao in (
+            select id from student where num = #{rec}
+        )
+    </select>
+
+
+</mapper>

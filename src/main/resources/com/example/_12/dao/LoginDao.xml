@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example._12.dao.LoginDao">
+    <resultMap id="ResultMap1" type="com.example._12.domain.Student">
+        <!--        id:主键-->
+        <!--        result:其他的-->
+        <!--        colum:列名-->
+        <!--        property:函数里面的名字-->
+        <!--        <id column="num" property="id"/>-->
+    </resultMap>
+    <resultMap id="ResultMap2" type="com.example._12.domain.venue">
+        <!--        id:主键-->
+        <!--        result:其他的-->
+        <!--        colum:列名-->
+        <!--        property:函数里面的名字-->
+        <!--        <id column="num" property="id"/>-->
+    </resultMap>
+    <resultMap id="ResultMap3" type="com.example._12.domain.Record">
+        <!--        id:主键-->
+        <!--        result:其他的-->
+        <!--        colum:列名-->
+        <!--        property:函数里面的名字-->
+        <!--        <id column="num" property="id"/>-->
+    </resultMap>
+    <delete id="deleteByIds">
+        delete from coach where num in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <update id="updateByNum">
+        update coach
+        <set>
+            <if test="name!=null and name!=''">
+                name = #{name},
+            </if>
+            <if test="sex!=null and sex!=''">
+                sex = #{sex},
+            </if>
+            <if test="age!=null">
+                age = #{age}
+            </if>
+        </set>
+        where num=#{num};
+    </update>
+
+    <select id="selectByPageAndContion" resultMap="ResultMap1">
+        select * from coach
+        <where>
+            <if test="student.name != null and student.name != '' ">
+                name like #{student.name}
+            </if>
+            <if test="student.sex != null and student.sex != '' ">
+                and sex = #{student.sex}
+            </if>
+        </where>
+        limit #{begin},#{size};
+    </select>
+    <select id="selectTotalCountByContion" resultType="integer">
+        select count(*) from coach
+        <where>
+            <if test="student.name != null and student.name != '' ">
+                name like #{student.name}
+            </if>
+            <if test="student.sex != null and student.sex != '' ">
+                and sex = #{student.sex}
+            </if>
+        </where>
+    </select>
+    <select id="selectStudentByNum" resultType="com.example._12.domain.Student">
+        select * from student where id in (
+            select num from user where username = #{username}
+        )
+    </select>
+    <select id="selectTeacherByNum" resultType="com.example._12.domain.Student">
+        select * from teacher where id in (
+            select num from user where username = #{username}
+        )
+    </select>
+    <select id="selectNormalByNum" resultType="com.example._12.domain.Student">
+        select * from normaluser where id in (
+            select num from user where username = #{username}
+        )
+    </select>
+</mapper>

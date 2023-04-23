@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example._12.dao.bookDao">
+    <!--    <resultMap id="ResultMap1" type="org.example.Student">-->
+    <!--        &lt;!&ndash;        id:主键&ndash;&gt;-->
+    <!--        &lt;!&ndash;        result:其他的&ndash;&gt;-->
+    <!--        &lt;!&ndash;        colum:列名&ndash;&gt;-->
+    <!--        &lt;!&ndash;        property:函数里面的名字&ndash;&gt;-->
+    <!--        &lt;!&ndash;        <id column="num" property="id"/>&ndash;&gt;-->
+    <!--    </resultMap>-->
+    <resultMap id="ResultMap2" type="com.example._12.domain.venue">
+        <!--        id:主键-->
+        <!--        result:其他的-->
+        <!--        colum:列名-->
+        <!--        property:函数里面的名字-->
+        <!--        <id column="num" property="id"/>-->
+    </resultMap>
+    <resultMap id="ResultMap3" type="com.example._12.domain.Record">
+        <!--        id:主键-->
+        <!--        result:其他的-->
+        <!--        colum:列名-->
+        <!--        property:函数里面的名字-->
+        <!--        <id column="num" property="id"/>-->
+    </resultMap>
+
+    <select id="selectVenueByPageAndContion" resultMap="ResultMap2">
+        select * from venue
+        <where>
+            <if test="ven.coach != null and ven.coach != '' ">
+                coach like #{ven.coach}
+            </if>
+            <if test="ven.id != null and ven.id != '' ">
+                and id = #{ven.id}
+            </if>
+        </where>
+        limit #{begin},#{size};
+    </select>
+
+    <select id="selectVenueTotalCountByContion" resultType="integer">
+        select count(*) from venue
+        <where>
+            <if test="ven.coach != null and ven.coach != '' ">
+                coach like #{ven.coach}
+            </if>
+            <if test="ven.id != null and ven.id != '' ">
+                and id = #{ven.id}
+            </if>
+        </where>
+    </select>
+
+</mapper>

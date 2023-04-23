@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example._12.dao.CoachConDao">
+    <resultMap id="ResultMap2" type="com.example._12.domain.venue">
+        <!--        id:主键-->
+        <!--        result:其他的-->
+        <!--        colum:列名-->
+        <!--        property:函数里面的名字-->
+        <!--        <id column="num" property="id"/>-->
+    </resultMap>
+    <resultMap id="ResultMap3" type="com.example._12.domain.Record">
+        <!--        id:主键-->
+        <!--        result:其他的-->
+        <!--        colum:列名-->
+        <!--        property:函数里面的名字-->
+        <!--        <id column="num" property="id"/>-->
+    </resultMap>
+
+    <select id="selectCancelByPageAndContion" resultMap="ResultMap3">
+        select * from record
+        <where>
+            <if test="rec.coach != null and rec.coach != '' ">
+                coach = #{rec.coach}
+            </if>
+            <if test="rec.id != null and rec.id != '' ">
+                and id = #{rec.id}
+            </if>
+            <if test="rec.xuehao != null and rec.xuehao !=''">
+                and xuehao = #{rec.xuehao}
+            </if>
+        </where>
+        limit #{begin},#{size};
+    </select>
+    <select id="selectCancelTotalCountByContion" resultType="integer">
+        select count(*) from record
+        <where>
+            <if test="rec.coach != null and rec.coach != '' ">
+                coach = #{rec.coach}
+            </if>
+            <if test="rec.id != null and rec.id != '' ">
+                and id = #{rec.id}
+            </if>
+            <if test="rec.xuehao != null and rec.xuehao !=''">
+                and xuehao = #{rec.xuehao}
+            </if>
+        </where>
+    </select>
+
+</mapper>
